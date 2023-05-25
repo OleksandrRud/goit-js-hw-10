@@ -9,22 +9,42 @@ const refs = {
 
 // let storedBreeds = [];
 
-API.fetchCatByBreed('breedId').then(resolt => console.log(resolt));
 API.fetchBreeds().then(data => {
-  data = data.filter(img => img.image?.url != null);
-  console.log(data);
-
   for (let i = 0; i < data.length; i++) {
-    // storedBreeds = data;
     const breed = data[i];
     let option = document.createElement('option');
-
-    // if (!breed.image) continue;
-
-    option.value = i;
-    console.log(option);
+    option.value = breed.id;
     option.innerHTML = `${breed.name}`;
     refs.select.appendChild(option);
   }
-  // return showBreedImage(0);
 });
+
+const onClick = e => {
+  const breedId = e.currentTarget.value;
+  API.fetchCatByBreed(breedId)
+    .then(resolt => {
+      url = resolt[0].url;
+      name = resolt[0].breeds[0].name;
+      description = resolt[0].breeds[0].description;
+      temperament = resolt[0].breeds[0].temperament;
+      return createMarkup(url, name, description, temperament);
+    })
+    .then(updateNewsList)
+    .catch(onError);
+};
+
+refs.select.addEventListener('click', onClick);
+
+function createMarkup() {
+  return `
+  <div >
+  <img src=${url} width='1000px'  >
+    <h2 >${name}</h2>
+    <p>${description}</p>
+    <p>${temperament}</p>
+    </div>`;
+}
+
+function updateNewsList(markup) {
+  refs.catInfo.innerHTML = markup;
+}

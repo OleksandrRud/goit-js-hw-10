@@ -8,9 +8,9 @@ function fetchBreeds() {
 }
 
 function fetchCatByBreed(breedId) {
-  return fetch(`${URL_SEARCH}?api_key=${API_KEY}&q=${breedId}`).then(res =>
-    res.json()
-  );
+  return fetch(
+    `${URL_SEARCH}?api_key=${API_KEY}&breed_ids=${breedId}`
+  ).then(res => res.json());
 }
 
 export default { fetchBreeds, fetchCatByBreed };

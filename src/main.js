@@ -9,42 +9,58 @@ const refs = {
 
 // let storedBreeds = [];
 
-API.fetchBreeds().then(data => {
-  for (let i = 0; i < data.length; i++) {
-    const breed = data[i];
-    let option = document.createElement('option');
-    option.value = breed.id;
-    option.innerHTML = `${breed.name}`;
-    refs.select.appendChild(option);
-  }
-});
+API.fetchBreeds()
+  .then(data => {
+    loader('none');
+    for (let i = 0; i < data.length; i++) {
+      const breed = data[i];
+      let option = document.createElement('option');
+      option.value = breed.id;
+      option.innerHTML = `${breed.name}`;
+      refs.select.appendChild(option);
+    }
+  })
+  .catch(onError);
 
 const onClick = e => {
   const breedId = e.currentTarget.value;
   API.fetchCatByBreed(breedId)
     .then(resolt => {
+      loader('block');
       url = resolt[0].url;
       name = resolt[0].breeds[0].name;
       description = resolt[0].breeds[0].description;
       temperament = resolt[0].breeds[0].temperament;
       return createMarkup(url, name, description, temperament);
     })
-    .then(updateNewsList)
+    .then(resolt => {
+      loader('none');
+      updateCatsList(resolt);
+    })
+
     .catch(onError);
 };
 
-refs.select.addEventListener('click', onClick);
+refs.select.addEventListener('change', onClick);
 
 function createMarkup() {
   return `
-  <div >
+  <div style="display:flex">
   <img src=${url} width='1000px'  >
+    <div>
     <h2 >${name}</h2>
     <p>${description}</p>
-    <p>${temperament}</p>
+    <p> <b>Temperament:</b> ${temperament}</p>
+    </div>
     </div>`;
 }
 
-function updateNewsList(markup) {
+function updateCatsList(markup) {
   refs.catInfo.innerHTML = markup;
+}
+function onError() {
+  refs.error.style.display = 'block';
+}
+function loader(value) {
+  refs.loader.style.display = value;
 }

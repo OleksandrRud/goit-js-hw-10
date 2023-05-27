@@ -4,10 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Homework 10</title>
+    <style>
+      .loader {
+        display: block;
+        position: relative;
+        height: 12px;
+        width: 80%;
+        border: 1px solid #fff;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .loader::after {
+        content: '';
+        width: 40%;
+        height: 100%;
+        background: #ff3d00;
+        position: absolute;
+        top: 0;
+        left: 0;
+        box-sizing: border-box;
+        animation: animloader 2s linear infinite;
+      }
+
+      @keyframes animloader {
+        0% {
+          left: 0;
+          transform: translateX(-100%);
+        }
+        100% {
+          left: 100%;
+          transform: translateX(0%);
+        }
+      }
+    </style>
   </head>
   <body>
     <select class="breed-select"></select>
-    <p class="loader" style="display:block">Loading data, please wait...</p>
+    <p class="loader">Loading data, please wait...</p>
     <p class="error" style="display:none">
       Oops! Something went wrong! Try reloading the page!
     </p>

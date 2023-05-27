@@ -1,4 +1,5 @@
 import API from './cat-api.js';
+import Notiflix from 'notiflix';
 
 const refs = {
   select: document.querySelector('.breed-select'),
@@ -7,11 +8,8 @@ const refs = {
   catInfo: document.querySelector('.cat-info'),
 };
 
-// let storedBreeds = [];
-
 API.fetchBreeds()
   .then(data => {
-    loader('none');
     for (let i = 0; i < data.length; i++) {
       const breed = data[i];
       let option = document.createElement('option');
@@ -19,26 +17,30 @@ API.fetchBreeds()
       option.innerHTML = `${breed.name}`;
       refs.select.appendChild(option);
     }
+    loader('none');
   })
   .catch(onError);
 
 const onClick = e => {
   const breedId = e.currentTarget.value;
+  loader('block');
   API.fetchCatByBreed(breedId)
     .then(resolt => {
-      loader('block');
+      loader('none');
       url = resolt[0].url;
       name = resolt[0].breeds[0].name;
       description = resolt[0].breeds[0].description;
       temperament = resolt[0].breeds[0].temperament;
       return createMarkup(url, name, description, temperament);
     })
+
     .then(resolt => {
-      loader('none');
       updateCatsList(resolt);
     })
-
-    .catch(onError);
+    .catch(err => {
+      loader('none');
+      onError(err);
+    });
 };
 
 refs.select.addEventListener('change', onClick);
@@ -59,8 +61,8 @@ function updateCatsList(markup) {
   refs.catInfo.innerHTML = markup;
 }
 function onError() {
-  refs.error.style.display = 'block';
+  Notiflix.Notify.failure(refs.error.textContent);
 }
 function loader(value) {
-  refs.loader.style.display = value;
+  refs.loader.style = `display:${value}`;
 }

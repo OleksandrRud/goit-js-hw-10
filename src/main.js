@@ -28,10 +28,11 @@ const onClick = e => {
     .then(resolt => {
       loader('none');
       url = resolt[0].url;
-      name = resolt[0].breeds[0].name;
+      q = resolt[0].breeds[0].name;
+      console.log(q);
       description = resolt[0].breeds[0].description;
       temperament = resolt[0].breeds[0].temperament;
-      return createMarkup(url, name, description, temperament);
+      return createMarkup(url, q, description, temperament);
     })
 
     .then(resolt => {

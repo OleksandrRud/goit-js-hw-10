@@ -1,4 +1,5 @@
-import API from './cat-api.js';
+import API from '../src/cat-api.js';
+
 import Notiflix from 'notiflix';
 
 const refs = {

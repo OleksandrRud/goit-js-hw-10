@@ -1,4 +1,4 @@
-import API from '../src/cat-api.js';
+import API from './cat-api.js';
 
 import Notiflix from 'notiflix';
 
@@ -28,16 +28,13 @@ const onClick = e => {
   API.fetchCatByBreed(breedId)
     .then(resolt => {
       loader('none');
-      url = resolt[0].url;
-      name = resolt[0].breeds[0].name;
-      description = resolt[0].breeds[0].description;
-      temperament = resolt[0].breeds[0].temperament;
-      return createMarkup({ url, name, description, temperament });
+      const url = resolt[0].url;
+      const cat = resolt[0].breeds[0].name;
+      const description = resolt[0].breeds[0].description;
+      const temperament = resolt[0].breeds[0].temperament;
+      return createMarkup(url, cat, description, temperament);
     })
-
-    .then(resolt => {
-      updateCatsList(resolt);
-    })
+    .then(updateCatsList)
     .catch(err => {
       loader('none');
       onError(err);
@@ -46,12 +43,12 @@ const onClick = e => {
 
 refs.select.addEventListener('change', onClick);
 
-function createMarkup() {
+function createMarkup(url, cat, description, temperament) {
   return `
   <div style="display:flex">
   <img src=${url} width='1000px'  >
     <div>
-    <h2 >${name}</h2>
+    <h2 >${cat}</h2>
     <p>${description}</p>
     <p> <b>Temperament:</b> ${temperament}</p>
     </div>
